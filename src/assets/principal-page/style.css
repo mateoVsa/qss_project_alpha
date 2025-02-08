@@ -1,0 +1,143 @@
+
+
+.navbar-custom{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(213, 182, 103, 0.5) !important; /* Color dorado con transparencia */
+    backdrop-filter: blur(10px); /* Difuminado elegante */
+    -webkit-backdrop-filter: blur(10px); /* Compatibilidad con Safari */
+    transition: background 0.3s ease-in-out;
+    z-index: 1000;
+  
+  }
+  .navbar-scrolled {
+    background-color: rgba(160, 137, 121, 0.4) !important;
+    backdrop-filter: blur(10px);
+  }
+  .nav-scroll{
+    color: #D5B667;
+  }
+  .hero-section {
+    background-size: cover;
+    background-position: center;
+    height: 125vh;
+    padding-top: 80px; /* Evita que el navbar tape el contenido */
+  }
+  .container-f{
+    background-color: rgba(160, 137, 121, 0.6);
+    padding: 50px;
+    border-radius: 4px;
+  }
+  .logo-img {
+    width: 160px;
+    margin-bottom: 1rem;
+  }
+  *{
+    font-family: "PT Serif Caption", serif;
+  font-weight: 400;
+  font-style: normal;
+  }
+  .header_1{
+    
+background-color: #003236;
+  }
+  .header3{
+    padding-top: 10%;
+  }
+  .poppins-extralight {
+      font-family: "Poppins", serif;
+      font-weight: 200;
+      font-style: normal;
+    }
+    .poppins-light {
+      font-family: "Poppins", serif;
+      font-weight: 300;
+      font-style: normal;
+    }
+    .poppins-semibold {
+      font-family: "Poppins", serif;
+      font-weight: 100;
+      font-style: bold ;
+    }
+    .poppins-medium {
+      font-family: "Poppins", serif;
+      font-weight: 400;
+      font-style: normal;
+      color: #003236 !important;
+    }
+    .text-hover:hover {
+      color: #003236 !important; /* Cambia el color del texto */
+      transition: color 0.3s ease !important; /* Suaviza el cambio de color */
+    }
+    .custom-line {
+        width: 25%;
+        height: 3px;
+        background-color: #D5B667;
+        border: none;
+        margin-top: 10px; 
+    }
+    .custom-line2{
+        border: 0;
+      border-top: 3px solid #D5B667; /* Color y grosor de la línea */
+      width: 80%; /* Ancho de la línea, puedes ajustarlo como quieras */
+      margin: 20px auto;
+      border-color: #D5B667 !important; /* Centra la línea y le da margen arriba y abajo */
+    }
+    
+    .btn{
+      background-color: #003236 !important;
+      border-color: #003236 !important;
+      
+    }
+    .buton{
+        background-color: #F8D49F !important;
+        border-color: #F8D49F !important;
+        color: #003236 !important;
+        
+      }
+
+    footer{
+      background-color: #003236 !important;
+      letter-spacing: 1px;
+    }
+    .navbar{
+      height: 120px !important;
+    }
+    /* Personaliza el fondo del menú desplegado */
+  .bg-custom {
+    background-color: #D5B667 !important; /* Mismo color del navbar */
+  }
+  
+  /* Personaliza los enlaces para que se distingan bien */
+  .navbar-nav .nav-link {
+    color: #ffffff !important; /* Letras blancas para contraste */
+    letter-spacing: 1px;
+   
+  }
+ 
+  .navbar-brand{
+    letter-spacing: 1.5px;
+  }
+  /* Efecto hover en los enlaces del menú */
+  .navbar-nav .nav-link:hover {
+    color:  #ddd2b8 !important; /* Cambia a negro al pasar el mouse */
+  }
+  b{
+    text-decoration: underline;
+  }
+  
+  /* estilos para backend*/
+  .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .suite-image {
+    height: 200px;
+    object-fit: cover;
+  }
