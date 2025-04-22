@@ -33,7 +33,7 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto fs-5">
             <li className="nav-item"><Link className="nav-link fw-bold" to="/">Inicio</Link></li>
-            <li className="nav-item"><Link className="nav-link fw-bold" to="/suites">Suites</Link></li>
+            <li className="nav-item"><Link className="nav-link fw-bold" to="#suites">Suites</Link></li>
             <li className="nav-item"><Link className="nav-link fw-bold" to="/servicios">Servicios</Link></li>
             <li className="nav-item"><Link className="nav-link fw-bold" to="/sobre-nosotros">Sobre nosotros</Link></li>
             <li className="nav-item"><Link className="nav-link fw-bold" to="/contacto">Contacto</Link></li>

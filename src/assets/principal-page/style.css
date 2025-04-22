@@ -90,6 +90,10 @@ background-color: #003236;
       border-color: #003236 !important;
       
     }
+    .btn2{
+      background-color: #D5B667 !important;
+      border-color: #D5B667 !important;
+    }
     .buton{
         background-color: #F8D49F !important;
         border-color: #F8D49F !important;
@@ -141,3 +145,204 @@ background-color: #003236;
     height: 200px;
     object-fit: cover;
   }
+  .suite-page {
+    margin-top: 180px; /* Ajusta según la altura del navbar */
+  }
+  .suite-title{
+    text-transform: uppercase;
+    letter-spacing: 4px;
+  }
+  .custom-slider .slick-prev, 
+.custom-slider .slick-next {
+  z-index: 10;
+  width: 20px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  border-radius: 50%; /* Hace que sean circulares */
+}
+
+.custom-slider .slick-prev:hover, 
+.custom-slider .slick-next:hover {
+  background-color: rgba(0, 0, 0, 0.8); /* Oscurece al pasar el mouse */
+}
+
+.custom-slider .slick-prev {
+  left: -25px; /* Mueve la flecha izquierda */
+}
+
+.custom-slider .slick-next {
+  right: -45px; /* Mueve la flecha derecha */
+}
+
+.custom-slider .slick-prev::before, 
+.custom-slider .slick-next::before {
+  font-size: 10px;
+  color: white; /* Color de la flecha */
+}
+
+
+.suite-slider .slick-prev, 
+.suite-slider .slick-next {
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+}
+
+.suite-slider .slick-prev:hover, 
+.suite-slider .slick-next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.suite-slider .slick-prev {
+  left: -50px;
+}
+
+.suite-slider .slick-next {
+  right: -50px;
+}
+
+.suite-slider .slick-prev::before, 
+.suite-slider .slick-next::before {
+  font-size: 24px;
+  color: white;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.card h3 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.card p {
+  font-size: 16px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.custom-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.custom-arrow:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.custom-prev {
+  left: 10px;
+}
+
+.custom-next {
+  right: 10px;
+}
+
+.price-icons {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+}
+
+.icon-container {
+  margin-left: 340px; /* Aumenta la distancia entre el precio y los íconos */
+  display: flex;
+  gap: 12px; /* Espacio entre los íconos */
+}
+
+.icon-style {
+  color: #D5B667;
+}
+
+.image-carousel-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.thumbnails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.thumbnail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow: hidden;
+  height: 300px; /* Ajusta según necesites */
+}
+
+.thumbnail {
+  width: 80px;
+  height: 60px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease-in-out, transform 0.2s;
+}
+
+.thumbnail.active {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.arrow {
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 20px;
+  transition: background 0.3s ease;
+}
+
+.arrow:hover {
+  background: rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
+.main-image-container {
+  flex-grow: 1;
+}
+
+.main-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.admin-con{
+  padding-top: 15vh !important;
+}
+
+.icon-sp{
+  list-style-type: none;
+  padding: 2px;
+  margin: 0;
+
+}
+.btn-delete{
+  background-color: red !important;
+  color: white !important;
+}
+.new-item{
+  background-color: #D5B667 !important;
+  border-color: #D5B667 !important;
+}
