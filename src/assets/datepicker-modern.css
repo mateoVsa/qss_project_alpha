@@ -1,0 +1,92 @@
+.react-datepicker {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.react-datepicker__header {
+  background-color: #ffffff;
+  border-bottom: none;
+  padding-top: 10px;
+}
+
+.react-datepicker__current-month {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.react-datepicker__day-name {
+  color: #888;
+  font-weight: 500;
+}
+
+.react-datepicker__day {
+  color: #444;
+  
+  transition: all 0.2s ease-in-out;
+}
+
+.react-datepicker__day:hover {
+  background-color: #f0f0f0;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #D5B667 !important; /* color Airbnb */
+  color: white !important;
+  
+}
+
+.react-datepicker__day--disabled {
+  color: #ccc !important;
+  text-decoration: line-through;
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+.input-fecha {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-fecha:focus {
+  border-color: #D5B667;
+  box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.2);
+}
+
+.campo-fecha {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+}
+.datepicker-wrapper {
+  position: relative;
+}
+
+.date-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ff385c;
+  font-size: 20px;
+  pointer-events: none;
+}
+.react-datepicker__current-month {
+  text-transform: capitalize !important;
+}
