@@ -87,7 +87,7 @@ useEffect(() => {
   
   const createTempReservation = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/reservas/temporal", {
+      const res = await axios.post("https://qss-backend-zed8.onrender.com/reservas/temporal", {
         suite_id: suite.id,
         start_date:startDate,
         end_date:endDate,
@@ -120,7 +120,7 @@ useEffect(() => {
   if (tempReservationId) {
     const timer = setTimeout(async () => {
       try {
-        await axios.delete(`http://localhost:5000/reservas/temporal/${tempReservationId}`);
+        await axios.delete(`https://qss-backend-zed8.onrender.com/reservas/temporal/${tempReservationId}`);
         console.log("Reserva temporal cancelada por tiempo excedido");
         alert("Tu reserva fue cancelada por inactividad. Intenta reservar de nuevo.");
         window.location.href = "/";
@@ -160,7 +160,7 @@ useEffect(() => {
 
   const handleApplyCoupon = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/coupons/validate", { code: coupon });
+      const res = await axios.post("https://qss-backend-zed8.onrender.com/api/coupons/validate", { code: coupon });
       if (res.data.valid) {
         setDiscountApplied(res.data.discount);
         setDiscountMessage(`Cupón aplicado: ${res.data.discount}% de descuento`);
@@ -642,7 +642,7 @@ function validateGuestForm(form, index) {
       formPayload.append("hora_llegada", responsable.horaLlegada);
     }
 
-    const response = await axios.post("http://localhost:5000/api/clientes/confirmar-reserva", formPayload, {
+    const response = await axios.post("https://qss-backend-zed8.onrender.com/api/clientes/confirmar-reserva", formPayload, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",

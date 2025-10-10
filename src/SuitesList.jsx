@@ -11,7 +11,7 @@ const SuitesList = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/suites")
+      .get("https://qss-backend-zed8.onrender.com/suites")
       .then((response) => {
         setSuites(response.data);
       })
@@ -36,7 +36,7 @@ const SuitesList = () => {
                     {suite.images.map((imgObj, index) => {
                       const imageUrl = imgObj.image_url.includes("dropbox.com")
                         ? imgObj.image_url.replace(/dl=0|dl=1/, "raw=1")
-                        : `http://localhost:5000${imgObj.image_url}`;
+                        : `https://qss-backend-zed8.onrender.com${imgObj.image_url}`;
                       return (
                         <Carousel.Item key={imgObj.id}>
                           <img

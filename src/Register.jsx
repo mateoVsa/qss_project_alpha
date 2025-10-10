@@ -40,7 +40,7 @@ const Register = ({ show, handleClose, onRegisterSuccess, children }) => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post("https://qss-backend-zed8.onrender.com/api/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
@@ -50,7 +50,7 @@ const Register = ({ show, handleClose, onRegisterSuccess, children }) => {
       localStorage.setItem("token", token);
       setUser(user);
 
-      const me = await axios.get("http://localhost:5000/api/auth/me", {
+      const me = await axios.get("https://qss-backend-zed8.onrender.com/api/auth/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

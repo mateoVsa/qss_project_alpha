@@ -15,7 +15,7 @@ const AdminReservas = () => {
 
   const fetchReservas = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/reservas", {
+      const res = await axios.get("https://qss-backend-zed8.onrender.com/api/admin/reservas", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const reservasConUrl = res.data.map((reserva) => ({
@@ -23,7 +23,7 @@ const AdminReservas = () => {
         clientes: reserva.clientes.map((cliente) => ({
           ...cliente,
           cedula_url: cliente.cedula_path
-            ? `http://localhost:5000/${cliente.cedula_path}`
+            ? `https://qss-backend-zed8.onrender.com/${cliente.cedula_path}`
             : null,
         })),
       }));
@@ -47,7 +47,7 @@ const AdminReservas = () => {
   const handleDownloadPDF = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/admin/reserva/${id}/pdf`,
+        `https://qss-backend-zed8.onrender.com/api/admin/reserva/${id}/pdf`,
         {
           method: "GET",
         }

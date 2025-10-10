@@ -47,7 +47,7 @@ const AdminSuites = () => {
 
   const fetchSuites = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/suites");
+      const res = await axios.get("https://qss-backend-zed8.onrender.com/suites");
 
       console.log("Suites desde backend:", res.data); // <-- Mira qué trae habilitada
     setSuites(res.data);
@@ -59,7 +59,7 @@ const AdminSuites = () => {
 
   const fetchAvailableComodidades = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/comodidades");
+      const res = await axios.get("https://qss-backend-zed8.onrender.com/comodidades");
       setAvailableComodidades(res.data);
     } catch (error) {
       console.error(error);
@@ -68,7 +68,7 @@ const AdminSuites = () => {
 
   const fetchSuiteComodidades = async (suiteId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/suites/${suiteId}/comodidades`);
+      const res = await axios.get(`https://qss-backend-zed8.onrender.com/suites/${suiteId}/comodidades`);
       setExistingComodidades(res.data);
     } catch (error) {
       console.error(error);
@@ -125,7 +125,7 @@ const AdminSuites = () => {
     if (!editingSuite || !imageId) return;
     if (!window.confirm("¿Eliminar esta imagen?")) return;
     try {
-      await axios.delete(`http://localhost:5000/suites/${editingSuite.id}/images/${imageId}`, axiosConfig);
+      await axios.delete(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}/images/${imageId}`, axiosConfig);
       setExistingImages(prev => prev.filter(img => img.id !== imageId));
     } catch (error) {
       console.error(error);
@@ -136,7 +136,7 @@ const AdminSuites = () => {
   const handleAddComodidad = async (comodidadId) => {
     if (!editingSuite || !comodidadId) return;
     try {
-      await axios.post(`http://localhost:5000/suites/${editingSuite.id}/comodidades`, { comodidad_id: comodidadId }, axiosConfig);
+      await axios.post(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}/comodidades`, { comodidad_id: comodidadId }, axiosConfig);
       const added = availableComodidades.find(c => c.id === comodidadId);
       setExistingComodidades(prev => [...prev, added]);
     } catch (error) {
@@ -148,7 +148,7 @@ const AdminSuites = () => {
     if (!editingSuite || !comodidadId) return;
     if (!window.confirm("¿Eliminar esta comodidad?")) return;
     try {
-      await axios.delete(`http://localhost:5000/suites/${editingSuite.id}/comodidades/${comodidadId}`, axiosConfig);
+      await axios.delete(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}/comodidades/${comodidadId}`, axiosConfig);
       setExistingComodidades(prev => prev.filter(c => c.id !== comodidadId));
     } catch (error) {
       console.error(error);
@@ -175,11 +175,11 @@ const AdminSuites = () => {
     try {
       let response;
       if (editingSuite) {
-        response = await axios.put(`http://localhost:5000/suites/${editingSuite.id}`, formData, {
+        response = await axios.put(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}`, formData, {
            ...axiosConfig, headers: { ...axiosConfig.headers, "Content-Type": "multipart/form-data" }
         });
       } else {
-        response = await axios.post("http://localhost:5000/suites", formData, {
+        response = await axios.post("https://qss-backend-zed8.onrender.com/suites", formData, {
            ...axiosConfig, headers: { ...axiosConfig.headers, "Content-Type": "multipart/form-data" }
         });
       }
@@ -195,7 +195,7 @@ const AdminSuites = () => {
   const handleDeleteSuite = async (suiteId) => {
     if (!window.confirm("¿Eliminar suite?")) return;
     try {
-      await axios.delete(`http://localhost:5000/suites/${suiteId}`, axiosConfig);
+      await axios.delete(`https://qss-backend-zed8.onrender.com/suites/${suiteId}`, axiosConfig);
       setSuites(prev => prev.filter(s => s.id !== suiteId));
     } catch (error) {
       console.error(error);
@@ -331,7 +331,7 @@ const AdminSuites = () => {
         imageUrl = imageUrl.replace(/dl=0|dl=1/, "raw=1");
       } else {
         // Si es local, anteponer el backend
-        imageUrl = `http://localhost:5000${imageUrl}`;
+        imageUrl = `https://qss-backend-zed8.onrender.com${imageUrl}`;
       }
 
       return (

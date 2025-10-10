@@ -38,7 +38,7 @@ const [isImageLoaded, setIsImageLoaded] = useState(false);
   useEffect(() => {
       const fetchDisabledDates = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/api/reservations/disabled_dates/${id}`);
+          const response = await axios.get(`https://qss-backend-zed8.onrender.com/api/reservations/disabled_dates/${id}`);
           console.log("Respuesta recibida:", response.data);
           const dates = response.data.map(dateString => new Date(dateString));
           setDisabledRanges(dates);
@@ -55,7 +55,7 @@ const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/suites/${id}`)
+      .get(`https://qss-backend-zed8.onrender.com/suites/${id}`)
       .then((response) => {
         console.log("Suite desde backend:", response.data);
         setSuite(response.data);
@@ -164,7 +164,7 @@ const getImageUrl = (url) => {
   if (url.includes("dropbox.com")) {
     return url.replace(/dl=0|dl=1/, "raw=1");
   }
-  return `http://localhost:5000${url}`;
+  return `https://qss-backend-zed8.onrender.com${url}`;
 };
   
   return (
