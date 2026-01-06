@@ -86,13 +86,14 @@ const ReservaCard = ({
           locale={es}
           dateFormat="dd 'de' MMMM, yyyy"
         />
-        <span className="material-symbols-outlined date-icon">calendar_month</span>
+        
         </div>
         
       </div>
 
       <div className="campo-fecha">
         <label htmlFor="salida"><strong>Salida</strong></label>
+        
         <DatePicker
           id="salida"
           selected={eDate}

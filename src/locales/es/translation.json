@@ -1,0 +1,14 @@
+
+{
+  "navbar": {
+    "inicio": "Inicio",
+    "suites": "Suites",
+    "servicios": "Servicios",
+    "sobreNosotros": "Sobre nosotros",
+    "contacto": "Contacto"
+  },
+  "botones": {
+    "explorar": "Explorar",
+    "reservar": "Reservar ahora"
+  }
+}

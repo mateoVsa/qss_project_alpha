@@ -1,4 +1,6 @@
 const express = require("express");
+require("dotenv").config();
+
 const cors = require("cors");
 const pool = require("./db");
 const path = require("path");
@@ -10,11 +12,16 @@ const adminAuth = require("./routes/adminAuth");
 const app = express();
 const { eachDayOfInterval, isWithinInterval } = require("date-fns");
 const authRoutes = require("./routes/auth");
+const paypalRoutes = require("./routes/paypal")
 const passport = require("passport")
 const clienteRoutes = require("./routes/clienteRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-const pdf = require("./routes/pdf")
+const misReservasRoutes = require("./routes/misReservasRoutes")
+const pdf = require("./routes/pdf");
+const { end } = require("pdfkit");
+const { blob } = require("stream/consumers");
 require("./config/passport")(passport);
+
 
 // Middleware
 app.use(cors({
@@ -29,6 +36,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin-auth", adminAuth);
 app.use("/api/admin",pdf);
 app.use("/api/clientes", clienteRoutes);
+app.use("/api/reservations", require("./routes/reservas"))
+app.use("/paypal", paypalRoutes)
+app.use("/reservas", require("./routes/reservasPublic"));
+app.use("/api", misReservasRoutes);
 
 //ruta de prueba protegida
 app.get(
@@ -422,6 +433,13 @@ app.get("/api/reservations/disabled_dates/:suiteId", async (req, res) => {
          ORDER BY start_date ASC`,
       [suiteId,now]
     );
+
+    const bloqueos = await pool.query(
+      `SELECT start_date, end_date 
+       FROM bloqueos 
+       WHERE suite_id = $1`,
+      [suiteId]
+    );
     let disabledDates = []
 
     result.rows.forEach(({start_date, end_date})=>{
@@ -433,6 +451,13 @@ app.get("/api/reservations/disabled_dates/:suiteId", async (req, res) => {
         disabledDates = [...disabledDates, ...days]
       }
     })
+    bloqueos.rows.forEach(({ start_date, end_date }) => {
+      const days = eachDayOfInterval({
+        start: new Date(start_date),
+        end: new Date(end_date),
+      });
+      disabledDates.push(...days);
+    });
     res.json(disabledDates);
   } catch (error) {
     console.error("Error obteniendo fechas reservadas:", error);
@@ -442,73 +467,270 @@ app.get("/api/reservations/disabled_dates/:suiteId", async (req, res) => {
 
 // Crear reserva temporal
 app.post("/reservas/temporal", async (req, res) => {
-  const { suite_id, start_date, end_date, personas, total_pagado, transporte } = req.body;
+  const { suite_id, start_date, end_date, personas, total_pagado, transporte, nombre_cliente, user_id } = req.body;
 
   try {
     const start = new Date(start_date);
-    const end = new Date(end_date)
+    const end = new Date(end_date);
 
-    if(start>= end){
-      return res.status(400).json({error: "La fecha de inicio debe ser anterior a la fecha final."})
+    if (start >= end) {
+      return res.status(400).json({ error: "La fecha de inicio debe ser anterior a la fecha final." });
     }
 
-    //obtenemos todas las reservas confirmadas o temporales activas
-
     const now = new Date();
-    const result = await pool.query(
+
+    // RESERVAS activas
+    const reservas = await pool.query(
       `SELECT start_date, end_date
        FROM reservas
        WHERE suite_id = $1
        AND (status = 'confirmada' OR (status = 'temporal' AND expires_at > $2))
        ORDER BY start_date ASC`,
-       [suite_id, now]
-    )
+      [suite_id, now]
+    );
 
-    // generar array con todas las fechas ocupadas
-    let occupiedDates = []
-    result.rows.forEach(({start_date, end_date})=>{
-      if(start_date && end_date){
+    // BLOQUEOS del admin
+    const bloqueos = await pool.query(
+      `SELECT start_date, end_date 
+       FROM bloqueos 
+       WHERE suite_id = $1`,
+      [suite_id]
+    );
+
+    // Construir calendario de ocupación
+    let occupiedDates = [];
+
+    reservas.rows.concat(bloqueos.rows).forEach(({ start_date, end_date }) => {
+      if (start_date && end_date) {
         const days = eachDayOfInterval({
           start: new Date(start_date),
           end: new Date(end_date),
         });
-        occupiedDates = [...occupiedDates, ...days]
+        occupiedDates = [...occupiedDates, ...days];
       }
     });
 
-    //verificamos si alguna fecha solicitada se solapa o sobrepone con fechas ya reservadas
+    // Rango solicitado
+    const requestedDates = eachDayOfInterval({ start, end });
 
-    const requestedDates = eachDayOfInterval({start, end});
+    // Verificar solapamiento
     const isOverlap = requestedDates.some(date =>
-      occupiedDates.some(occ=> occ.getTime()=== date.getTime())
+      occupiedDates.some(occ => occ.getTime() === date.getTime())
     );
 
-    if(isOverlap){
-      return res.status(400).json({error: " Las fechas seleccionadas no estan disponibles"})
+    if (isOverlap) {
+      return res.status(400).json({ error: "Las fechas seleccionadas no están disponibles" });
     }
 
-    //crear la reserva temporal
+    const expiresAt = new Date(now.getTime() + 10 * 60000);
+    const transporteBool = transporte === "true" || transporte === true;
 
-    const expiresAt = new Date(now.getTime()+ 10 * 60000);
     const insertResult = await pool.query(
-      `INSERT INTO reservas (suite_id, start_date, end_date, personas, total_pagado, status, created_at, expires_at, transporte)
-       VALUES ($1, $2, $3, $4, $5, 'temporal', NOW(), $6, $7)
+      `INSERT INTO reservas 
+      (suite_id, start_date, end_date, personas, total_pagado, status, created_at, expires_at, transporte, nombre_cliente, user_id)
+       VALUES ($1, $2, $3, $4, $5, 'temporal', NOW(), $6, $7, $8, $9)
        RETURNING *`,
-       [suite_id, start, end, personas, total_pagado, expiresAt, transporte]
+      [suite_id, start, end, personas, total_pagado, expiresAt, transporteBool, nombre_cliente,user_id]
     );
 
     res.json({
       success: true,
-      message: "Reserva temporal creada con exito",
+      message: "Reserva temporal creada con éxito",
       reservationId: insertResult.rows[0].id,
-      reservation: insertResult.rows[0]
-    })
-
+      expiresAt: expiresAt.getTime(),
+      reservation: insertResult.rows[0],
+    });
   } catch (error) {
     console.error("Error creando reserva temporal:", error);
     res.status(500).json({ error: "Error al crear reserva temporal" });
   }
 });
+
+
+//Endpoints para el bloqueo manual de fechas para las suites
+
+app.post(
+  "/admin/bloqueos",
+  passport.authenticate("jwt", { session: false }),
+  requireAdmin,
+  async (req, res) => {
+    const { suite_id, start_date, end_date, motivo } = req.body;
+
+    try {
+      if (!suite_id || !start_date || !end_date) {
+        return res.status(400).json({ error: "Datos incompletos" });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO bloqueos (suite_id, start_date, end_date, motivo)
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+        [suite_id, start_date, end_date, motivo || null]
+      );
+
+      res.json({ success: true, bloqueo: result.rows[0] });
+    } catch (err) {
+      console.error("Error creando bloqueo:", err);
+      res.status(500).json({ error: "Error al crear bloqueo" });
+    }
+  }
+);
+
+
+app.get("/admin/bloqueos/:suite_id", async (req, res) => {
+  const { suite_id } = req.params;
+
+  try {
+    const result = await pool.query(
+      "SELECT * FROM bloqueos WHERE suite_id = $1 ORDER BY start_date ASC",
+      [suite_id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error obteniendo bloqueos:", err);
+    res.status(500).json({ error: "Error al obtener bloqueos" });
+  }
+});
+
+// Eliminar bloqueo
+app.delete("/admin/bloqueos/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await pool.query("DELETE FROM bloqueos WHERE id = $1", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error eliminando bloqueo:", err);
+    res.status(500).json({ error: "Error al eliminar bloqueo" });
+  }
+});
+
+
+//Endpoints para la generacion de cupones
+//crear cupon
+app.post('/api/cupones', async (req, res) => {
+  const { discount_percentage } = req.body;
+  const code = `QSS-${Math.random().toString(36).substring(2, 8).toUpperCase()}`; // genera un código aleatorio
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO discount_codes (code, discount_percentage)
+       VALUES ($1, $2)
+       RETURNING *`,
+      [code, discount_percentage]
+    );
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear el cupón' });
+  }
+});
+
+
+
+//validar cupon
+
+app.post('/api/cupones/validar',async (req,res)=>{
+  const {code} = req.body;
+
+  try{
+    const result = await pool.query(
+      `SELECT * FROM discount_codes 
+       WHERE code = $1 AND is_used = false`,
+       [code]
+    );
+    if(result.rows.length === 0){
+      return res.status(400).json({
+        valido: false,
+        mensaje: 'Cupon inválido o ya utilizado'
+      });
+    }
+
+    const cupon = result.rows[0];
+    res.json({
+      valido: true,
+      porcentaje: parseFloat(cupon.discount_percentage),
+    })
+  }catch(error){
+    console.error(error);
+    res.status(500).json({error: 'Error al validar el cupón'})
+  }
+})
+
+//Marcar cupon como usado tras confirmar la reserva
+
+app.post('/api/cupones/usar', async (req,res)=>{
+  const {code} = req.body;
+  try{
+    const result = await pool.query(
+       `UPDATE discount_codes
+       SET is_used = true
+       WHERE code = $1 AND is_used = false
+       RETURNING *`,
+       [code]
+    )
+    if(result.rowCount ===0){
+      return res.status(400).json({mensaje: 'Cupon no encontrado o ya usado'})
+    }
+    res.json({mensaje: 'Cupón aplicado correctamente'})
+  }catch(error){
+    console.error(error);
+    res.status(500).json({error: 'Error al usar el cupón'})
+  }
+});
+
+//mostrar los cupones creados 
+app.get('/api/cupones', async (req, res)=>{
+  try{
+    const result = await pool.query(
+      'SELECT * FROM discount_codes ORDER BY created_at DESC'
+    );
+    res.json(result.rows);
+
+  }catch(error){
+    console.error(error);
+      res.status(500).json({error: 'No se pudo obtener los cupones'})
+  }
+})
+
+// Actualizar un cupón
+app.put('/api/cupones/:id', async (req, res) => {
+  const { id } = req.params;
+  const { code, discount_percentage, is_used } = req.body;
+  try {
+    const result = await pool.query(
+      `UPDATE discount_codes
+       SET code = $1, discount_percentage = $2, is_used = $3
+       WHERE id = $4
+       RETURNING *`,
+      [code, discount_percentage, is_used || false, id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Cupón no encontrado' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al actualizar cupón' });
+  }
+});
+
+// Eliminar un cupón
+app.delete('/api/cupones/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM discount_codes WHERE id = $1 RETURNING *', [id]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Cupón no encontrado' });
+    }
+    res.json({ message: 'Cupón eliminado correctamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar cupón' });
+  }
+});
+
+
 
 // Limpieza automática de reservas temporales vencidas
 setInterval(async () => {
@@ -529,7 +751,7 @@ setInterval(async () => {
    🚀 INICIAR SERVIDOR
 ============================ */
 
-const PORT = process.env.PORT ||5000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

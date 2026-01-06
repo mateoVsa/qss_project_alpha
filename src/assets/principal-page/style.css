@@ -1,16 +1,128 @@
+/* Contenedor de acciones en tablas del panel admin */
+.admin-action-buttons .ctmBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+  padding: 0;
+
+  border-radius: 10px; /* estilo moderno */
+  transition: all 0.2s ease;
+}
+
+/* Íconos más grandes y centrados */
+.admin-action-buttons .ctmBtn i {
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+/* Hover estilo Airbnb */
+.admin-action-buttons .ctmBtn:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-2px); /* levanta el botón suavemente */
+}
+
+/* Zoom del icono al hacer hover */
+.admin-action-buttons .ctmBtn:hover i {
+  transform: scale(1.2);
+}
+
+/* Tooltip más limpio */
+.tooltip-inner {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+/* Botón base */
+.icon-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px !important;
+  padding: 0 !important;
+  transition: all 0.18s ease;
+
+  backdrop-filter: blur(5px);
+}
+
+/* Tamaños */
+.icon-btn-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.icon-btn-md {
+  width: 38px;
+  height: 38px;
+}
+
+.icon-btn-lg {
+  width: 48px;
+  height: 48px;
+}
+
+/* Íconos */
+.icon-btn i {
+  font-size: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+/* Hover: estilo Airbnb / Meta */
+.icon-btn:hover i {
+  transform: scale(1.17);
+}
+
+/* Variantes personalizadas tipo “ghost buttons” */
+
+.btn-ghost,
+.btn-outline-ghost {
+  background-color: transparent !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  color: #222 !important;
+}
+
+.btn-ghost:hover {
+  background-color: rgba(0,0,0,0.06) !important;
+}
+
+/* Variantes admin */
+.btn-outline-primary.icon-btn:hover {
+  background-color: rgba(0, 123, 255, 0.12) !important;
+}
+
+.btn-outline-danger.icon-btn:hover {
+  background-color: rgba(220, 53, 69, 0.12) !important;
+}
+
+.btn-outline-warning.icon-btn:hover {
+  background-color: rgba(255, 193, 7, 0.12) !important;
+}
+
+/* Tooltip elegante */
+.tooltip-inner {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  border-radius: 8px;
+}
+
+.tooltip {
+  opacity: 0 !important;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.show > .tooltip {
+  opacity: 1 !important;
+}
 
 
-.navbar-custom{
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(213, 182, 103, 0.5) !important; /* Color dorado con transparencia */
-    backdrop-filter: blur(10px); /* Difuminado elegante */
-    -webkit-backdrop-filter: blur(10px); /* Compatibilidad con Safari */
-    transition: background 0.3s ease-in-out;
-    z-index: 1000;
-  
-  }
+.navbar-custom {
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
   .navbar-transparent {
   background-color: transparent;
   transition: all 0.3s ease-in-out;
@@ -23,7 +135,14 @@
   .nav-scroll{
     color: #D5B667;
   }
- 
+ .navbar-icon-button {
+  color: white;
+  font-size: 1.6rem;
+  transition: transform 0.2s ease;
+}
+.navbar-icon-button:hover {
+  transform: scale(1.15);
+}
   .navbar-icon-button.btn{
   background-color: transparent !important;
   background: transparent !important;
@@ -34,7 +153,7 @@
   font-size: 1.5rem;
 }
 .navbar-logo {
-   transition: transform 0.3s ease-in-out;
+   transition: transform 0.3s ease;
 }
 .navbar-logo:hover {
   transform: scale(1.05);
@@ -58,10 +177,10 @@
   position: absolute;
   width: 0%;
   height: 2px;
-  bottom: -4px;
+  bottom: -6px;
   left: 0;
-  background-color: #f8c14e;
-  transition: width 0.3s ease-in-out;
+ background: #ffc107;
+  transition: width 0.3s ease;
 }
 
 .nav-link:hover::after {
@@ -140,12 +259,19 @@ background-color: #1b576b;
       margin: 20px auto;
       border-color: #D5B667 !important;
     }
-    
-    .btn{
+    .ctmBtn{
+      border: none;
+      background-color: transparent !important;
+    }
+    /* .btn{
       background-color: #1b576b !important;
       border-color: #1b576b !important;
       
-    }
+    } */
+     .btn1{
+      background-color: #1b576b !important;
+      border-color: #1b576b !important;
+     }
     .btn2{
       background-color: #D5B667 !important;
       border-color: #D5B667 !important;
@@ -162,6 +288,60 @@ background-color: #1b576b;
       border-radius:  60% 60% 60% 60%;
       background-color: #ffffff !important;
     }
+
+    /*
+    Facturacion y modal*/
+    .billing-modal .modal-content {
+  border-radius: 18px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border: none;
+  animation: fadeIn 0.25s ease;
+  background-color: #fff;
+  padding: 4px 4px;
+}
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.billing-modal .modal-header,
+.billing-modal .modal-footer {
+  border: none !important;
+}
+
+.billing-modal .modal-header .modal-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.billing-modal .btn-primary {
+  background-color: #D5B667 !important; /* tono Airbnb */
+  border: none;
+}
+
+.billing-modal .btn-outline-secondary {
+  color: #555;
+  border-color: #ddd;
+}
+
+.billing-modal .btn-primary:hover {
+  background-color: #d5b667ec !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /**/
 .material-symbols-outlined {
@@ -413,7 +593,7 @@ background-color: #1b576b;
   border-radius: 10px;
 }
 .admin-con{
-  padding-top: 15vh !important;
+  padding-top: 18vh !important;
 }
 
 .icon-sp{
@@ -765,4 +945,382 @@ background-color: #1b576b;
 #admin-suites-tabs .nav-link.active {
   color: #1b576b !important;       /* texto activo */
   background-color: #d5b66793; /* fondo activo */
+}
+
+.navbar-custom .dropdown-toggle {
+  color: white !important;
+  font-weight: 600;
+}
+
+.navbar-custom .dropdown-menu {
+  min-width: 150px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-custom .dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+.countdown-bubble {
+  position: fixed;
+  top: 45vh;        /* ⬅️ antes estaba bottom: ahora arriba */
+  right: 15px;
+  background: #D5B667;
+  color: white;
+  padding: 6px 10px;    /* ⬅️ más pequeño */
+  border-radius: 20px;  /* ⬅️ burbuja oval pequeña */
+  font-size: 0.9rem;    /* ⬅️ más pequeño */
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.low-time {
+  background: red;
+  animation: pulse 0.8s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Contenedor general del texto de la suite */
+.suite-text {
+  white-space: pre-wrap;       /* Respeta saltos de línea y viñetas */
+  text-align: justify;         /* Justificación */
+  line-height: 1.6;            /* Espaciado entre líneas */
+  word-wrap: break-word;       /* Evita textos cortados */
+  font-size: 1rem;             /* Tamaño estándar */
+  margin-bottom: 1.5rem;       /* Espacio inferior */
+}
+
+/* Para listas dentro del texto */
+.suite-text ul,
+.suite-text ol {
+  padding-left: 1.5rem;        /* Sangría correcta */
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.suite-text li {
+  margin-bottom: 0.4rem;       /* Espaciado entre viñetas */
+}
+
+
+
+.selector-personas-container {
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 12px;
+  transition: 0.2s ease;
+}
+
+.selector-personas-container:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.selector-personas-container button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+
+/* ----------------------------- */
+/* GLOBAL                       */
+/* ----------------------------- */
+
+.step-card {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+  animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.optional {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #6c757d;
+  margin-left: 6px;
+}
+
+/* ----------------------------- */
+/* STEPPER                       */
+/* ----------------------------- */
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0;
+  gap: 10px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  position: relative;
+}
+
+.step .number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e3e3e3;
+  color: #444;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 6px;
+  transition: all 0.25s ease;
+}
+
+.step.active .number {
+  background: #0d6efd;
+  color: white;
+  transform: scale(1.05);
+}
+
+.step span {
+  font-size: 0.9rem;
+  color: #444;
+  font-weight: 500;
+}
+
+.step.active span {
+  color: #0d6efd;
+}
+
+.line {
+  height: 3px;
+  flex: 1;
+  background: #d8d8d8;
+  border-radius: 3px;
+  transition: background 0.25s ease;
+}
+
+.step.active ~ .line {
+  background: #0d6efd;
+}
+
+/* ----------------------------- */
+/* BUTTON ROW                    */
+/* ----------------------------- */
+
+.button-row {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.button-row .btn {
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+/* Efecto en hover */
+.button-row .btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+}
+
+/* Botón primario */
+.btn-primary-stepper {
+  background: #0d6efd !important;
+  border-color: #0d6efd !important;
+}
+
+/* Botón secundario */
+.btn-secondary {
+  background: #6c757d !important;
+  border-color: #6c757d !important;
+}
+
+/* ----------------------------- */
+/* SCREEN: “¿Deseas ingresar datos?” */
+/* ----------------------------- */
+
+.step-card h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.step-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* ----------------------------- */
+/* RESPONSIVE                    */
+/* ----------------------------- */
+
+@media (max-width: 768px) {
+  .stepper {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .line {
+    width: 60%;
+    height: 2px;
+  }
+
+  .button-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .step-card {
+    padding: 18px;
+  }
+}
+
+.progress-wrapper {
+  width: 100%;
+  height: 10px;
+  background: #e6e6e6;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #0d6efd, #4d9dff);
+  width: 0%;
+  transition: width 0.4s ease-in-out;
+  border-radius: 8px;
+}
+.carousel-indicators [data-bs-target] {
+  background-color: white;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1);
+}
+.circular-text {
+  margin: 0 auto;
+  border-radius: 50%;
+  width: 200px;
+  position: relative;
+  height: 200px;
+  font-weight: bold;
+  color: #1b576b;
+  font-weight: 900;
+  text-align: center;
+  cursor: pointer;
+  transform-origin: 50% 50%;
+  -webkit-transform-origin: 50% 50%;
+}
+
+.circular-text span {
+  position: absolute;
+  display: inline-block;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  font-size: 24px;
+  transition: all 0.5s cubic-bezier(0, 0, 0, 1);
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #e9ecef 25%,
+    #f8f9fa 37%,
+    #e9ecef 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* === TIPOS === */
+
+.skeleton-carousel {
+  height: 320px;
+  width: 100%;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 60%;
+}
+
+.skeleton-location {
+  height: 14px;
+  width: 45%;
+}
+
+.skeleton-text {
+  height: 16px;
+}
+
+.skeleton-small {
+  height: 14px;
+  width: 60px;
+}
+
+.skeleton-date {
+  height: 16px;
+  width: 100px;
+}
+
+.skeleton-price {
+  height: 28px;
+  width: 120px;
+}
+
+.skeleton-note {
+  height: 48px;
+  width: 100%;
+}
+
+/* Estabilidad visual */
+.payment-card {
+  transform: none !important;
+  transition: none !important;
+}
+.qss-input{
+  border-color: #D5B667 !important;
+  color: #D5B667 !important;
+}
+.style-tr{
+  font-weight: bold !important;
 }

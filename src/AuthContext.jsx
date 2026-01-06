@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { flushSync } from "react-dom";
-
+import API_URL from "./config/api";
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -20,9 +20,12 @@ export const AuthProvider = ({ children }) => {
         }
 
       try {
-        const res = await axios.get("https://qss-backend-zed8.onrender.com/api/auth/me", {
+        // const res = await axios.get("https://qss-backend-zed8.onrender.com/api/auth/me", {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // });
+        const res = await axios.get(`${API_URL}/api/auth/me`,{
           headers: { Authorization: `Bearer ${token}` },
-        });
+        })
         setUser(res.data.user);
       } catch (err){
         console.error("Token invalido o expirado", err)
@@ -39,18 +42,24 @@ export const AuthProvider = ({ children }) => {
   //Funcion para login centralizado
 
   const login = async(email, password)=>{
-    const res = await axios.post("https://qss-backend-zed8.onrender.com/api/auth/login", {
+    // const res = await axios.post("https://qss-backend-zed8.onrender.com/api/auth/login", {
+    //   email,
+    //   password,
+    // });
+    const res = await axios.post(`${API_URL}/api/auth/login`,{
       email,
       password,
-    });
+    })
 
     const {token} = res.data;
     localStorage.setItem("token", token)
 
-    const me = await axios.get("https://qss-backend-zed8.onrender.com/api/auth/me", {
+    // const me = await axios.get("https://qss-backend-zed8.onrender.com/api/auth/me", {
+    //   headers: { Authorization: `Bearer ${token}` },
+    // });
+    const me = await axios.get(`${API_URL}/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
-    });
-
+    })
     setUser(me.data.user);
     return me.data.user;
   };

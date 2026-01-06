@@ -21,7 +21,7 @@ const AdminLogin = () => {
     e.preventDefault();
     try {
       const user = await login(email, password);
-
+      console.log("Resultado del login",user);
       if (user.role !== "admin") {
         setError("No tienes permisos de administrador");
         return;

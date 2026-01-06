@@ -12,13 +12,18 @@ import SuitesList from "./SuitesList";
 import AdminSuites from "./AdminSuites";
 import PurchaseDetail from "./PurchaseDetail";
 import Login from "./login";
-import AdminLogin from "./AdminLogin"; // <-- Login exclusivo admin
+import AdminLogin from "./AdminLogin";
 import ProtectedRoute from "./ProtectedRoute";
 import Header from "./Header";
-
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import PaymentSuccess from "./PaymentSuccess";
+import PaymentFailed from "./PaymentFailed";
+import MisReservas from "./MisReservas";
+import PrivacyPolicy from "./PrivacyPolicy";
 function App() {
   return (
-    <Router>
+    <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID }}>
+<Router>
       <Routes>
         {/* Páginas públicas */}
         <Route
@@ -59,7 +64,27 @@ function App() {
             </PublicLayout>
           }
         />
+        <Route path="/pago-exitoso/:reservaId" element={<PaymentSuccess />} />
+        <Route path="/pago-fallido/:reservaId" element={<PaymentFailed />} />
+
         <Route path="/login" element={<Login />} />
+        <Route
+  path="/mis-reservas"
+  element={
+    <PublicLayout>
+      <MisReservas />
+    </PublicLayout>
+  }
+/>
+<Route
+  path="/politica-privacidad"
+  element={
+    <PublicLayout>
+      <PrivacyPolicy />
+    </PublicLayout>
+  }
+/>
+
 
         {/* Login exclusivo de admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -77,6 +102,8 @@ function App() {
         />
       </Routes>
     </Router>
+    </PayPalScriptProvider>
+    
   );
 }
 

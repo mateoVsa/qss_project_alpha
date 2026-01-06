@@ -1,7 +1,7 @@
 import { Button, Navbar, Container, Nav, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useAuth } from "../AuthContext";
 import "bootstrap-icons/font/bootstrap-icons.css";
-
+import IconButton from "../IconButton";
 const AdminLayout = ({ children }) => {
   const { logout } = useAuth();
 
@@ -20,23 +20,22 @@ const AdminLayout = ({ children }) => {
         <Container>
           <Navbar.Brand>Panel de Administración</Navbar.Brand>
           <Nav className="ms-auto">
-            <OverlayTrigger
-              placement="bottom"
-              overlay={<Tooltip id="tooltip-home">Ver página principal</Tooltip>}
-            >
-              <Button variant="outline-light" className="btn2 me-2" onClick={goToHome}>
-                <i className="bi bi-house me-1"></i>
-              </Button>
-            </OverlayTrigger>
-
-            <OverlayTrigger
-              placement="bottom"
-              overlay={<Tooltip id="tooltip-logout">Cerrar sesión</Tooltip>}
-            >
-              <Button variant="outline-danger" className="btn-delete" onClick={handleLogout}>
-                <i className="bi bi-box-arrow-right me-1"></i>
-              </Button>
-            </OverlayTrigger>
+            <IconButton
+            icon="bi bi-house me-1"
+            variant="outline-light"
+            size="md"
+            className="btn2"
+            tooltip="Ver Página principal"
+            onClick={goToHome}
+            />
+            <IconButton
+            icon="bi bi-box-arrow-right me-1"
+            variant="outline-danger"
+            size="md"
+            tooltip="Cerrar Sesión"
+            className="btn-delete"
+            onClick={handleLogout}
+            />
           </Nav>
         </Container>
       </Navbar>

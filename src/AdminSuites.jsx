@@ -5,7 +5,11 @@ import {useAuth} from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import AdminReservas from "./AdminReservas";
 import { Collection } from "react-bootstrap-icons";
-
+import AdminCupones from "./AdminCupones";
+import { Modal } from 'react-bootstrap';
+import SuiteBlocks from "./SuiteBlocks";
+import IconButton from "./IconButton";
+import API_URL from "./config/api";
 const AdminSuites = () => {
   const {user} = useAuth();
   const token = localStorage.getItem("token")
@@ -34,7 +38,11 @@ const AdminSuites = () => {
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
 
-  
+  const [showBlockModal, setShowBlockModal] = useState(false);
+  const [selectedSuite, setSelectedSuite] = useState(null);
+
+
+
   const axiosConfig = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -47,8 +55,8 @@ const AdminSuites = () => {
 
   const fetchSuites = async () => {
     try {
-      const res = await axios.get("https://qss-backend-zed8.onrender.com/suites");
-
+      // const res = await axios.get("https://qss-backend-zed8.onrender.com/suites");
+      const res = await axios.get(`${API_URL}/suites`)
       console.log("Suites desde backend:", res.data); // <-- Mira qué trae habilitada
     setSuites(res.data);
 
@@ -59,7 +67,8 @@ const AdminSuites = () => {
 
   const fetchAvailableComodidades = async () => {
     try {
-      const res = await axios.get("https://qss-backend-zed8.onrender.com/comodidades");
+      // const res = await axios.get("https://qss-backend-zed8.onrender.com/comodidades");
+      const res = await axios.get(`${API_URL}/comodidades`)
       setAvailableComodidades(res.data);
     } catch (error) {
       console.error(error);
@@ -68,7 +77,8 @@ const AdminSuites = () => {
 
   const fetchSuiteComodidades = async (suiteId) => {
     try {
-      const res = await axios.get(`https://qss-backend-zed8.onrender.com/suites/${suiteId}/comodidades`);
+      // const res = await axios.get(`https://qss-backend-zed8.onrender.com/suites/${suiteId}/comodidades`);
+      const res = await axios.get(`${API_URL}/suites/${suiteId}/comodidades`)
       setExistingComodidades(res.data);
     } catch (error) {
       console.error(error);
@@ -125,7 +135,8 @@ const AdminSuites = () => {
     if (!editingSuite || !imageId) return;
     if (!window.confirm("¿Eliminar esta imagen?")) return;
     try {
-      await axios.delete(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}/images/${imageId}`, axiosConfig);
+      // await axios.delete(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}/images/${imageId}`, axiosConfig);
+       await axios.delete(`${API_URL}/suites/${editingSuite.id}/images/${imageId}`, axiosConfig);
       setExistingImages(prev => prev.filter(img => img.id !== imageId));
     } catch (error) {
       console.error(error);
@@ -136,7 +147,8 @@ const AdminSuites = () => {
   const handleAddComodidad = async (comodidadId) => {
     if (!editingSuite || !comodidadId) return;
     try {
-      await axios.post(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}/comodidades`, { comodidad_id: comodidadId }, axiosConfig);
+      // await axios.post(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}/comodidades`, { comodidad_id: comodidadId }, axiosConfig);
+      await axios.post(`${API_URL}/suites/${editingSuite.id}/comodidades`, { comodidad_id: comodidadId }, axiosConfig);
       const added = availableComodidades.find(c => c.id === comodidadId);
       setExistingComodidades(prev => [...prev, added]);
     } catch (error) {
@@ -148,7 +160,8 @@ const AdminSuites = () => {
     if (!editingSuite || !comodidadId) return;
     if (!window.confirm("¿Eliminar esta comodidad?")) return;
     try {
-      await axios.delete(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}/comodidades/${comodidadId}`, axiosConfig);
+      // await axios.delete(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}/comodidades/${comodidadId}`, axiosConfig);
+      await axios.delete(`${API_URL}/suites/${editingSuite.id}/comodidades/${comodidadId}`, axiosConfig);
       setExistingComodidades(prev => prev.filter(c => c.id !== comodidadId));
     } catch (error) {
       console.error(error);
@@ -175,11 +188,17 @@ const AdminSuites = () => {
     try {
       let response;
       if (editingSuite) {
-        response = await axios.put(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}`, formData, {
+        // response = await axios.put(`https://qss-backend-zed8.onrender.com/suites/${editingSuite.id}`, formData, {
+        //    ...axiosConfig, headers: { ...axiosConfig.headers, "Content-Type": "multipart/form-data" }
+        // });
+         response = await axios.put(`${API_URL}/suites/${editingSuite.id}`, formData, {
            ...axiosConfig, headers: { ...axiosConfig.headers, "Content-Type": "multipart/form-data" }
         });
       } else {
-        response = await axios.post("https://qss-backend-zed8.onrender.com/suites", formData, {
+        // response = await axios.post("https://qss-backend-zed8.onrender.com/suites", formData, {
+        //    ...axiosConfig, headers: { ...axiosConfig.headers, "Content-Type": "multipart/form-data" }
+        // });
+        response = await axios.post(`${API_URL}/suites`, formData, {
            ...axiosConfig, headers: { ...axiosConfig.headers, "Content-Type": "multipart/form-data" }
         });
       }
@@ -195,12 +214,18 @@ const AdminSuites = () => {
   const handleDeleteSuite = async (suiteId) => {
     if (!window.confirm("¿Eliminar suite?")) return;
     try {
-      await axios.delete(`https://qss-backend-zed8.onrender.com/suites/${suiteId}`, axiosConfig);
+      // await axios.delete(`https://qss-backend-zed8.onrender.com/suites/${suiteId}`, axiosConfig);
+      await axios.delete(`${API_URL}/suites/${suiteId}`, axiosConfig);
       setSuites(prev => prev.filter(s => s.id !== suiteId));
     } catch (error) {
       console.error(error);
     }
   };
+
+  const handleOpenBlockDatesModal = (suite)=>{
+    setSelectedSuite(suite);
+    setShowBlockModal(true);
+  }
 
   return (
     <div className="container mt-4">
@@ -209,38 +234,69 @@ const AdminSuites = () => {
         activeKey={key}
         onSelect={(k) => setKey(k)}
         className="mb-3"
-      >
+      ><Tab eventKey="cupones" title="Cupones">
+  <AdminCupones />
+</Tab>
         <Tab eventKey="list" title="Lista de Suites">
-          <Table className="table table-striped" bordered hover responsive>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Precio</th>
-                <th>Capacidad</th>
-                <th>Habilitada</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {suites.map(suite => (
-                <tr key={suite.id}>
-                  <td>{suite.nombre}</td>
-                  <td>${suite.precio}</td>
-                  <td>{suite.max_capacity}</td>
-<td>
+         <Table className="table table-striped" bordered hover responsive>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Precio</th>
+      <th>Capacidad</th>
+      <th>Habilitada</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {suites.map((suite) => (
+      <tr key={suite.id}>
+        <td>{suite.nombre}</td>
+        <td>${suite.precio}</td>
+        <td>{suite.max_capacity}</td>
+        <td>
           {suite.habilitada ? (
             <span className="badge bg-success">Habilitada</span>
           ) : (
             <span className="badge bg-secondary">Deshabilitada</span>
           )}
-        </td>                  <td>
-                    <Button className="btn2" size="sm" variant="warning" onClick={() => handleEdit(suite)}>Editar</Button>{" "}
-                    <Button size="sm" variant="danger"  className="btn-delete ms-2" onClick={() => handleDeleteSuite(suite.id)}>Eliminar</Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+        </td>
+        <td>
+  <div className="admin-action-buttons d-flex align-items-center gap-2">
+
+    <IconButton
+      icon="bi-pencil"
+      tooltip="Editar suite"
+      className="ctmBtn"
+      variant="outline-primary"
+      size="md"
+      onClick={() => handleEdit(suite)}
+    />
+
+    <IconButton
+      icon="bi-trash"
+      tooltip="Eliminar suite"
+      variant="outline-danger"
+      size="md"
+      onClick={() => handleDeleteSuite(suite.id)}
+    />
+
+    <IconButton
+      icon="bi-calendar-x"
+      tooltip="Bloquear fechas"
+      variant="outline-warning"
+      size="md"
+      onClick={() => handleOpenBlockDatesModal(suite)}
+    />
+
+  </div>
+</td>
+        
+      </tr>
+    ))}
+  </tbody>
+</Table>
+
         </Tab>
 
         <Tab eventKey="form" title={editingSuite ? "Editar Suite" : "Nueva Suite"}>
@@ -331,7 +387,8 @@ const AdminSuites = () => {
         imageUrl = imageUrl.replace(/dl=0|dl=1/, "raw=1");
       } else {
         // Si es local, anteponer el backend
-        imageUrl = `https://qss-backend-zed8.onrender.com${imageUrl}`;
+        // imageUrl = `https://qss-backend-zed8.onrender.com${imageUrl}`;
+        imageUrl = `${API_URL}${imageUrl}`;
       }
 
       return (
@@ -352,7 +409,7 @@ const AdminSuites = () => {
             className="position-absolute top-0 end-0"
             onClick={() => handleDeleteImage(img.id)}
           >
-            <i class="bi bi-x-lg"></i>
+            <i className="bi bi-x-lg"></i>
           </Button>
         </div>
       );
@@ -382,7 +439,7 @@ const AdminSuites = () => {
 </Badge>
                 ))}
 
-                <h5><i class="bi bi-plus-lg"></i> Agregar comodidad</h5>
+                <h5><i className="bi bi-plus-lg"></i> Agregar comodidad</h5>
                 {availableComodidades.filter(c => !existingComodidades.some(ec => ec.id === c.id)).map(c => (
                   <Button key={c.id} size="sm" variant="secondary" className="me-2 mb-2 btn2" onClick={() => handleAddComodidad(c.id)}>{c.nombre}</Button>
                 ))}
@@ -409,6 +466,23 @@ const AdminSuites = () => {
         <AdminReservas />
       </Tab>
       </Tabs>
+      <Modal
+  show={showBlockModal}
+  onHide={() => setShowBlockModal(false)}
+  centered
+  size="lg"
+>
+  <Modal.Header closeButton>
+    <Modal.Title>Bloquear Fechas — {selectedSuite?.nombre}</Modal.Title>
+  </Modal.Header>
+
+  <Modal.Body>
+    {selectedSuite && (
+      <SuiteBlocks suiteId={selectedSuite.id} />
+    )}
+  </Modal.Body>
+</Modal>
+
     </div>
   );
 };

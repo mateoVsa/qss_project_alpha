@@ -1,7 +1,7 @@
 import React from "react";
 
 const WhatsappBubble = () => {
-  const phoneNumber = "593991633631";
+  const phoneNumber = "593995921047";
 
   return (
     <a

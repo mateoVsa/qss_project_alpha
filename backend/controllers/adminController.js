@@ -16,6 +16,15 @@ exports.getReservasConClientes = async (req, res) => {
         r.status,
         r.created_at,
         s.nombre AS suite_nombre,
+
+        json_build_object(
+        'nombre', f.nombre,
+        'cedula_ruc', f.cedula_ruc,
+        'direccion', f.direccion,
+        'telefono', f.telefono,
+        'correo', f.correo
+        )AS factura,
+
         json_agg(
           json_build_object(
             'id', c.id,
@@ -28,6 +37,7 @@ exports.getReservasConClientes = async (req, res) => {
             'parentesco', c.parentesco,
             'motivo', c.motivo,
             'detalle_motivo', c.detalle_motivo,
+            'ciudad', c.ciudad,
             'cedula_path', c.cedula_path,
             'is_responsable', c.is_responsable
           )
@@ -35,13 +45,17 @@ exports.getReservasConClientes = async (req, res) => {
       FROM reservas r
       JOIN suites s ON s.id = r.suite_id
       LEFT JOIN clientes c ON c.reserva_id = r.id
-      GROUP BY r.id, s.nombre
+      LEFT JOIN facturacion f ON f.reserva_id = r.id
+
+      GROUP BY r.id, s.nombre, f.nombre, f.cedula_ruc, f.direccion, f.telefono, f.correo
       ORDER BY r.created_at DESC
     `;
     const baseURL = process.env.BASE_URL || "http://localhost:5000";
 
     const result = await pool.query(query);
     const reservas = result.rows.map((reserva) => {
+
+      reserva.clientes = reserva.clientes?.[0]?.id ? reserva.clientes : [];
       reserva.clientes = reserva.clientes.map((cliente) => {
         if (cliente.cedula_path) {
           cliente.cedula_url = `${baseURL}/uploads/${cliente.cedula_path}`;

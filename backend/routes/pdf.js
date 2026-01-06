@@ -20,11 +20,14 @@ router.get("/reserva/:reservaId/pdf", async (req, res) => {
        WHERE r.id = $1`,
       [reservaId]
     );
-
+    const clienteResponsable = await pool.query(
+      `SELECT * FROM clientes WHERE reserva_id = $1 AND is_responsable = true`,
+      [reservaId]
+    )
     if (reservaResult.rows.length === 0) {
       return res.status(404).json({ error: "Reserva no encontrada" });
     }
-
+    const elcliente = clienteResponsable.rows[0]
     const reserva = reservaResult.rows[0];
 
     const clientesResult = await pool.query(
@@ -46,7 +49,7 @@ router.get("/reserva/:reservaId/pdf", async (req, res) => {
     doc.fontSize(14).text(`Reserva #${reserva.id}`, { underline: true });
     doc.moveDown();
     doc.fontSize(12)
-      .text(`Cliente Responsable: ${reserva.nombre_cliente}`)
+      .text(`Cliente Responsable: ${elcliente.nombres} ${elcliente.apellidos}`)
       .text(`Suite: ${reserva.suite_nombre}`)
       .text(`Fecha Inicio: ${new Date(reserva.start_date).toLocaleDateString()}`)
       .text(`Fecha Fin: ${new Date(reserva.end_date).toLocaleDateString()}`)
@@ -55,16 +58,33 @@ router.get("/reserva/:reservaId/pdf", async (req, res) => {
 
     // Lista de huéspedes
     doc.fontSize(14).text("Huéspedes:", { underline: true });
-    clientes.forEach((c, i) => {
-      doc.fontSize(12).list([
-        `Nombre: ${c.nombres} ${c.apellidos}`,
-        `Teléfono: ${c.telefono}`,
-        `Teléfono de Emergencia: ${c.telefono_emergencia}`,
-        `Parentesco: ${c.parentesco || "-"}`,
-        `Motivo: ${c.motivo || "-"} ${c.detalle_motivo ? "- " + c.detalle_motivo : ""}`,
-        `Responsable: ${c.is_responsable ? "Sí" : "No"}`,
-      ]).moveDown(0.5);
-    });
+
+clientes.forEach((c, i) => {
+  const datosBasicos = [
+    `Nombre: ${c.nombres} ${c.apellidos}`,
+    `Correo: ${c.correo}`,
+    `Ciudad: ${c.ciudad}`,
+    `Teléfono: ${c.telefono}`,
+    `Teléfono de Emergencia: ${c.telefono_emergencia} (${c.parentesco})`,
+  ];
+
+  const datosExtra = [
+    `Motivo: ${c.motivo || "-"} ${c.detalle_motivo ? "- " + c.detalle_motivo : ""}`,
+    `Responsable: ${c.is_responsable ? "Sí" : "No"}`,
+  ];
+
+  // Si el huésped es responsable, mostramos todo
+  if (c.is_responsable) {
+    doc.fontSize(12).list([...datosBasicos, ...datosExtra]).moveDown(0.5);
+  } else {
+    // Si no lo es, mostramos solo nombre, apellido y si es responsable
+    doc.fontSize(12).list([
+      `Nombre: ${c.nombres} ${c.apellidos}`,
+      `Responsable: No`,
+    ]).moveDown(0.5);
+  }
+});
+
 
     // Pie de página
     const pageCount = doc.bufferedPageRange().count;

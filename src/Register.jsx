@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Modal, Button, Form, Alert, FloatingLabel } from "react-bootstrap";
 import { useAuth } from "./AuthContext";
-
+import API_URL from "./config/api";
 const Register = ({ show, handleClose, onRegisterSuccess, children }) => {
   const { setUser } = useAuth();
   const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ const Register = ({ show, handleClose, onRegisterSuccess, children }) => {
     email: "",
     password: "",
     confirmPassword: "",
+    consentimiento: false,
   });
   const [error, setError] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
@@ -24,6 +25,10 @@ const Register = ({ show, handleClose, onRegisterSuccess, children }) => {
       );
     }
   };
+  const handleConsentChange = (e) => {
+  setFormData({ ...formData, consentimiento: e.target.checked });
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,19 +43,36 @@ const Register = ({ show, handleClose, onRegisterSuccess, children }) => {
       setError("Las contraseñas no coinciden");
       return;
     }
+    if (!formData.consentimiento) {
+  setError("Debes aceptar la Política de Privacidad y el tratamiento de datos.");
+  return;
+}
+
 
     try {
-      const res = await axios.post("https://qss-backend-zed8.onrender.com/api/auth/register", {
+      // const res = await axios.post("https://qss-backend-zed8.onrender.com/api/auth/register", {
+      //   name: formData.name,
+      //   email: formData.email,
+      //   password: formData.password,
+      // });
+
+      const res = await axios.post(`${API_URL}/api/auth/register`,{
         name: formData.name,
         email: formData.email,
         password: formData.password,
-      });
+        consentimiento: formData.consentimiento,
+      })
+
+
 
       const { token, user } = res.data;
       localStorage.setItem("token", token);
       setUser(user);
 
-      const me = await axios.get("https://qss-backend-zed8.onrender.com/api/auth/me", {
+      // const me = await axios.get("https://qss-backend-zed8.onrender.com/api/auth/me", {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+      const me = await axios.get(`${API_URL}/api/auth/me`,{
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -120,6 +142,21 @@ const Register = ({ show, handleClose, onRegisterSuccess, children }) => {
               </p>
             )}
           </FloatingLabel>
+              <Form.Check
+  type="checkbox"
+  className="mb-3"
+  label={
+    <>
+      Acepto la{" "}
+      <a href="/politica-privacidad" target="_blank" rel="noopener noreferrer">
+        Política de Privacidad
+      </a>{" "}
+      y el tratamiento de mis datos personales.
+    </>
+  }
+  checked={formData.consentimiento}
+  onChange={handleConsentChange}
+/>
 
           <Button variant="success" type="submit" className="w-100">
             Registrarse

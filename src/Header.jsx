@@ -23,10 +23,10 @@ function Header() {
                 Explora
               </a>
               <a
-        href="https://wa.me/593991633631?text=¡Hola! Estoy interesad@ en más información sobre las suites que ofertan."
+        href="https://wa.me/593995921047?text=¡Hola! Estoy interesad@ en más información sobre las suites que ofertan."
         target="_blank"
         rel="noopener noreferrer" 
-        className="btn btn-success btn-lg rounded-pill"
+        className="btn btn1 btn-success btn-lg rounded-pill"
       >
         <i className="bi bi-whatsapp"></i> Escríbenos
       </a>

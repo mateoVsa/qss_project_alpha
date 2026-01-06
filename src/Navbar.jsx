@@ -5,6 +5,7 @@ import { useAuth } from "./AuthContext";
 import Login from "./login";
 import Register from "./Register";
 import { Dropdown } from "react-bootstrap";
+import { useTranslation } from "react-i18next"; // Importamos hook de traducción
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -12,6 +13,12 @@ const Navbar = () => {
   const [showRegister, setShowRegister] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation(); // Inicializamos traducción
+
+  // Cambio de idioma
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   // abrir / cerrar login
   const handleLoginShow = () => {
@@ -46,7 +53,6 @@ const Navbar = () => {
         }`}
       >
         <div className="container d-flex align-items-center justify-content-between">
-          {/* Botón Hamburguesa */}
           <button
             className="navbar-toggler"
             type="button"
@@ -56,26 +62,25 @@ const Navbar = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          {/* Opciones de navegación */}
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto fs-5 align-items-center">
               <li className="nav-item">
-                <Link className="nav-link fw-bold" to="/">Inicio</Link>
+                <Link className="nav-link fw-bold" to="/">{t("Home")}</Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link fw-bold" href="#suites">Suites</a>
+                <a className="nav-link fw-bold" href="#suites">{t("Suites")}</a>
               </li>
               <li className="nav-item">
-                <Link className="nav-link fw-bold" to="/servicios">Servicios</Link>
+                <Link className="nav-link fw-bold" to="/servicios">{t("Services")}</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link fw-bold" to="/sobre-nosotros">Sobre nosotros</Link>
+                <Link className="nav-link fw-bold" to="/sobre-nosotros">{t("About")}</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link fw-bold" to="/contacto">Contacto</Link>
+                <Link className="nav-link fw-bold" to="/contacto">{t("Contact")}</Link>
               </li>
 
-              {/* Menú usuario */}
+              {/* Menú de usuario */}
               <li className="nav-item fw-bold">
                 <Dropdown align="end">
                   <Dropdown.Toggle
@@ -90,44 +95,73 @@ const Navbar = () => {
                     {!user ? (
                       <>
                         <Dropdown.Item onClick={handleLoginShow}>
-                          Iniciar sesión
+                         <i class="bi bi-door-open"></i> {t("Login")}
                         </Dropdown.Item>
                         <Dropdown.Item onClick={handleRegisterShow}>
-                          Registrarse
+                          {t("Sign In")}
                         </Dropdown.Item>
                       </>
                     ) : (
                       <>
                         <Dropdown.Header>
-                          Hola, {user.name}
+                        <i class="bi bi-file-person-fill"></i>  {user.name} 
                         </Dropdown.Header>
+                         <Dropdown.Item onClick={() => navigate("/mis-reservas")}>
+      <i class="bi bi-card-checklist"></i> {t("My reservations")}
+    </Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item onClick={handleLogout}>
-                          Cerrar sesión
+                          {t("Logout")} 
                         </Dropdown.Item>
                       </>
                     )}
                   </Dropdown.Menu>
                 </Dropdown>
               </li>
+
+              
             </ul>
           </div>
 
-          {/* Logo */}
-          <Link className="navbar-brand d-flex align-items-center ms-auto" to="/">
-            <img
-              src={logo}
-              alt="Logo Quito Smiles Suites"
-              width="160"
-              height="120"
-              className="navbar-logo"
-            />
-          </Link>
+          {/* Logo y selector de idioma */}
+<div className="d-flex align-items-center ms-auto gap-3">
+  <Link className="navbar-brand d-flex align-items-center" to="/">
+    <img
+      src={logo}
+      alt="Logo Quito Smiles Suites"
+      width="160"
+      height="120"
+      className="navbar-logo"
+    />
+  </Link>
+
+  {/* Selector de idioma */}
+  {/* <Dropdown align="end">
+    <Dropdown.Toggle
+      variant="light"
+      className="d-flex align-items-center border-0 bg-transparent fw-semibold"
+      style={{ color: "#fff" }}
+    >
+      <i className="bi bi-translate me-2"></i>
+      {i18n.language === "es" ? "Español" : "English"}
+    </Dropdown.Toggle>
+
+    <Dropdown.Menu>
+      <Dropdown.Item onClick={() => changeLanguage("es")}>
+        🇪🇸 Español
+      </Dropdown.Item>
+      <Dropdown.Item onClick={() => changeLanguage("en")}>
+        🇺🇸 English
+      </Dropdown.Item>
+    </Dropdown.Menu>
+  </Dropdown> */}
+</div>
+
         </div>
       </nav>
 
-      {/* Modal Login con link a Register */}
-       <Login
+      {/* Modales */}
+      <Login
         show={showLogin}
         handleClose={handleLoginClose}
         children={
@@ -147,8 +181,7 @@ const Navbar = () => {
         }
       />
 
-      {/* Modal Register con link a Login */}
-       <Register
+      <Register
         show={showRegister}
         handleClose={handleRegisterClose}
         children={

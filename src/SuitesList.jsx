@@ -4,14 +4,15 @@ import axios from "axios";
 import { Carousel } from "react-bootstrap";
 import { Heart } from "lucide-react";
 import "./assets/principal-page/style.css";
-
+import API_URL from "./config/api";
 const SuitesList = () => {
   const [suites, setSuites] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get("https://qss-backend-zed8.onrender.com/suites")
+      // .get("https://qss-backend-zed8.onrender.com/suites")
+      .get(`${API_URL}/suites`)
       .then((response) => {
         setSuites(response.data);
       })
@@ -36,7 +37,8 @@ const SuitesList = () => {
                     {suite.images.map((imgObj, index) => {
                       const imageUrl = imgObj.image_url.includes("dropbox.com")
                         ? imgObj.image_url.replace(/dl=0|dl=1/, "raw=1")
-                        : `https://qss-backend-zed8.onrender.com${imgObj.image_url}`;
+                        // : `https://qss-backend-zed8.onrender.com${imgObj.image_url}`;
+                        : `${API_URL}${imgObj.image_url}` ;
                       return (
                         <Carousel.Item key={imgObj.id}>
                           <img
