@@ -18,11 +18,21 @@ const clienteRoutes = require("./routes/clienteRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const misReservasRoutes = require("./routes/misReservasRoutes")
 const pdf = require("./routes/pdf");
+const uploadSuites = require("./middlewares/uploadSuites");
+const uploadDocs = require("./middlewares/uploadDocs");
 const { end } = require("pdfkit");
 const { blob } = require("stream/consumers");
 require("./config/passport")(passport);
 
+function getFileUrl(file){
+  if(!file) return null;
 
+  // si viene de cloudinary ya es url
+  if(file.path.startsWith("http")) return file.path;
+
+  // si es local
+  return `/uploads/suites/${file.filename}`;
+}
 // Middleware
 app.use(cors({
   origin: "*",
@@ -184,7 +194,7 @@ app.get("/suites/:id", async (req, res) => {
 
 
 // Crear nueva suite
-app.post("/suites",passport.authenticate("jwt", {session: false}),requireAdmin,upload.array("images",10), async (req, res) => {
+app.post("/suites",passport.authenticate("jwt", {session: false}),requireAdmin,uploadSuites.array("images",10), async (req, res) => {
   try {
     const { nombre, descripcion, descripcion_pequena, zona_estrategica, desc_movilidad, precio, max_capacity,habilitada, comodidades, latitud, longitud } = req.body;
 
@@ -202,7 +212,7 @@ app.post("/suites",passport.authenticate("jwt", {session: false}),requireAdmin,u
     if(req.files && req.files.length > 0){
       const insertImages = req.files.map(file => pool.query(
         "INSERT INTO suite_images (suite_id, image_url) VALUES ($1, $2)",
-        [suiteId, "/uploads/suites/" + file.filename]
+        [suiteId, getFileUrl(file)]
       ));
       await Promise.all(insertImages);
     }
@@ -226,7 +236,7 @@ app.post("/suites",passport.authenticate("jwt", {session: false}),requireAdmin,u
 });
 
 // Actualizar suite
-app.put("/suites/:id",passport.authenticate("jwt", {session: false}),requireAdmin,upload.array("images", 10), async (req, res) => {
+app.put("/suites/:id",passport.authenticate("jwt", {session: false}),requireAdmin,uploadSuites.array("images", 10), async (req, res) => {
   const { id } = req.params;
   const { nombre, descripcion, descripcion_pequena, zona_estrategica, desc_movilidad, precio, max_capacity, habilitada, latitud, longitud } = req.body;
 
@@ -247,7 +257,7 @@ app.put("/suites/:id",passport.authenticate("jwt", {session: false}),requireAdmi
     if(req.files && req.files.length > 0){
       const insertImages = req.files.map(file => pool.query(
         "INSERT INTO suite_images (suite_id, image_url) VALUES ($1, $2)",
-        [id, "/uploads/suites/"+ file.filename]
+        [id, getFileUrl(file)]
       ));
       await Promise.all(insertImages);
     }
@@ -306,7 +316,7 @@ app.get("/suites/:id/images", async (req, res) => {
 });
 
 // Agregar imágenes a una suite
-app.post("/suites/:id/images",passport.authenticate("jwt", {session: false}),requireAdmin, upload.array("images"), async (req, res) => {
+app.post("/suites/:id/images",passport.authenticate("jwt", {session: false}),requireAdmin, uploadSuites.array("images"), async (req, res) => {
   try {
     const { id } = req.params;
     const files = req.files;
@@ -315,10 +325,12 @@ app.post("/suites/:id/images",passport.authenticate("jwt", {session: false}),req
       return res.status(400).json({ error: "No se subieron imágenes" });
     }
 
-    const values = files.map((file) => `('${id}', '/uploads/${file.filename}')`).join(",");
-    await pool.query(
-      `INSERT INTO suite_images (suite_id, image_url) VALUES ${values}`
-    );
+  for(const file of files){
+  await pool.query(
+    "INSERT INTO suite_images (suite_id, image_url) VALUES ($1,$2)",
+    [id, getFileUrl(file)]
+  );
+}
 
     res.json({ message: "Imágenes agregadas correctamente" });
   } catch (error) {
