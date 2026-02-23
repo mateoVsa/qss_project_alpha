@@ -35,10 +35,9 @@ const SuitesList = () => {
                 {suite.images && suite.images.length > 0 ? (
                   <Carousel interval={3000} controls={false} indicators={false} fade>
                     {suite.images.map((imgObj, index) => {
-                      const imageUrl = imgObj.image_url.includes("dropbox.com")
-                        ? imgObj.image_url.replace(/dl=0|dl=1/, "raw=1")
-                        // : `https://qss-backend-zed8.onrender.com${imgObj.image_url}`;
-                        : `${API_URL}${imgObj.image_url}` ;
+                     const imageUrl = imgObj.image_url.startsWith("http")
+  ? imgObj.image_url
+  : `${API_URL}${imgObj.image_url}`;
                       return (
                         <Carousel.Item key={imgObj.id}>
                           <img
