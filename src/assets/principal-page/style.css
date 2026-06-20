@@ -405,16 +405,20 @@ background-color: #1b576b;
     letter-spacing: 4px;
   }
   .suite-card:hover {
+    transform: scale(1.03);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+.suite-card {
+  transition: all 0.25s ease;
 }
 
 .suite-card img {
   border-bottom: 1px solid #f1f1f1;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease;
 }
 
 .suite-card:hover img {
-  transform: scale(1.03);
+  transform: scale(1.05);
 }
   .custom-slider .slick-prev, 
 .custom-slider .slick-next {
@@ -1323,4 +1327,60 @@ background-color: #1b576b;
 }
 .style-tr{
   font-weight: bold !important;
+}
+
+.luxury-title-section {
+  position: relative;
+  background: #ffffff;
+  padding: 20px 20px;
+  overflow: hidden;
+}
+
+.overlay-logo {
+  position: absolute;
+  inset: 0;
+
+  background-image: url("C:\Users\mateo\Desktop\qss\qss_project_alpha\src\assets\principal-page\logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 230px;
+
+  opacity: 0.09;
+
+  transform: scale(1.4);
+} 
+
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+.luxury-title-section h3 {
+  letter-spacing: 4px;
+}
+
+.gold-line {
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(to right, #c8a96b, #f1d6a2);
+  margin: 18px auto;
+  border-radius: 20px;
+}
+
+.description {
+  max-width: 800px;
+  font-size: 1.1rem;
+  line-height: 1.9;
+  opacity: 0.9;
+}
+.section-logo {
+  width: 80px;
+  height: auto;
+  margin-bottom: 18px;
+
+  opacity: 0.95;
+
+  filter: drop-shadow(0 0 12px rgba(200, 169, 107, 0.35));
+
+  
 }

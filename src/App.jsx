@@ -31,19 +31,27 @@ function App() {
           element={
             <PublicLayout>
               <Header />
-              <section id="suites">
-                <div className="container-fluid p-5">
-                  <div className="text-center position-relative">
-                    <h3 className="display-6 fw-bold d-inline-block">SUITES</h3>
-                    <hr className="custom-line mx-auto" />
-                  </div>
-                  <p className="lead text-dark m-4">
-                    Suites amobladas para rentas cortas. Totalmente equipadas
-                    para estadías cómodas en la ciudad (cocina, baño, lavandería,
-                    parqueadero, etc.) Ubicadas en las mejores zonas de Quito.
-                  </p>
-                </div>
-              </section>
+              <section id="suites" className="luxury-title-section">
+  <div className="overlay-logo"></div>
+  <div className="content text-center">
+    <img
+    src="src\assets\principal-page\logo.png"
+    alt="Logo"
+    className="section-logo"
+  />
+
+    <h3 className="display-5 fw-bold text-uppercase text-black">
+      SUITES
+    </h3>
+
+    <div className="gold-line"></div>
+
+    <p className="lead text-black mt-4 mx-auto description">
+      Suites amobladas para rentas cortas. Totalmente equipadas
+      para estadías cómodas en la ciudad.
+    </p>
+  </div>
+</section>
               <SuitesList />
             </PublicLayout>
           }
